@@ -19,18 +19,18 @@ BEGIN { use_ok('Locale::Maketext::TieHash::L10N') };
   );
 }
 
+print "# create and store language handle\n";
 use Locale::Maketext::TieHash::L10N;
 my %mt;
-print "# create and store language handle\n";
 { my $lh = L10N->get_handle('en') || die "What language?";
   ok $lh && ref $lh;
   tie %mt, 'Locale::Maketext::TieHash::L10N', L10N => $lh;
 }
 print "# set option numf_comma to 1 and set nbsp_flag to ~\n";
-{ my %config = tied(%mt)->Config(numf_comma => 1, nbsp_flag => '~');
+{ my %cfg = tied(%mt)->Config(numf_comma => 1, nbsp_flag => '~');
   ok
-    $config{numf_comma}
-    && $config{nbsp_flag} eq '~'
+    $cfg{numf_comma}
+    && $cfg{nbsp_flag} eq '~'
   ;
 }
 print "# initiating dying by storing wrong options\n";
@@ -63,11 +63,11 @@ print "# translate\n";
 print "# check method Config()\n";
 { my %cfg = tied(%mt)->Config(nbsp_flag => '~~');
   ok $cfg{L10N} && ref($cfg{L10N}) && $cfg{nbsp} eq '&nbsp;' && $cfg{nbsp_flag} eq '~~';
-  () = tied(%mt)->Config(nbsp_flag => '~');
+  tied(%mt)->Config(nbsp_flag => '~');
 }
 print "# check deprecated methods Keys(), Values() and Get(qw/L10N nbsp nbsp_flag/)\n";
-@mt{tied(%mt)->Keys} = tied(%mt)->Values;
-{ my ($lh, $nbsp, $nbsp_flag) = tied(%mt)->Get(qw/L10N nbsp nbsp_flag/);
+{ @mt{tied(%mt)->Keys} = tied(%mt)->Values;
+  my ($lh, $nbsp, $nbsp_flag) = tied(%mt)->Get(qw/L10N nbsp nbsp_flag/);
   ok $lh && ref($lh) && $nbsp eq '&nbsp;' && $nbsp_flag eq '~';
 }
 print "# initiating dying by deprecated method Get()\n";

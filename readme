@@ -1,4 +1,4 @@
-Locale-Maketext-TieHash-L10N version 0.04
+Locale-Maketext-TieHash-L10N version 0.05
 =========================================
 
 Object methods like maketext don't have interpreted into strings.

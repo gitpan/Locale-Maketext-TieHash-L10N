@@ -14,3 +14,7 @@ Revision history for Perl extension Locale::Maketext::TieHash::L10N.
           - Keys
           - Values
           - Get
+
+0.05  Sun Feb 13 14:10:00 2005
+	- only pod-documentation is expanded
+

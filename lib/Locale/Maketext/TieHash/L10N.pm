@@ -5,21 +5,23 @@ use strict;
 use warnings;
 use Carp qw(croak);
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 require Tie::Hash;
 our @ISA = qw(Tie::Hash);
 
 sub TIEHASH {
   my $self = bless {}, shift;
-  () = $self->Config(nbsp => '&nbsp;', @_);
+  $self->Config(nbsp => '&nbsp;', @_);
   $self;
 }
 
-sub Config
-{ my $self = shift;
-  while (@_)
-  { my ($key, $value) = (shift(), shift);
+# configure
+sub Config {
+  # Object, Parameter Hash
+  my $self = shift;
+  while (@_) {
+    my ($key, $value) = (shift(), shift);
     unless ($key) {
       croak 'key is not true';
     }
@@ -34,6 +36,7 @@ sub Config
       croak "key is not 'L10N' or 'nbsp' or 'nbsp_flag' or 'numf_comma'";
     }
   }
+  defined wantarray or return;
   ( %{$self},
     exists $self->{L10N}
     ? (numf_comma => $self->{L10N}->{numf_comma})
@@ -63,7 +66,7 @@ sub FETCH {
 sub STORE {
   # Object, Key, Value
   my ($self, $key, $value) = @_;
-  () = $self->Config($key => $value);
+  $self->Config($key => $value);
 }
 
 # get all keys back (deprecated)
@@ -102,8 +105,11 @@ Locale::Maketext::TieHash::L10N - Tying language handle to a hash
  my %mt;
  { use MyProgram::L10N;
    my $lh = MyProgram::L10N->get_handle() || die "What language?";
-   # configure language handle and option numf_comma
-   tie %mt, 'Locale::Maketext::TieHash::L10N', L10N => $lh, numf_comma => 1;
+   # tie and configure
+   tie %mt, 'Locale::Maketext::TieHash::L10N',
+     L10N       => $lh,   # save language handle
+     numf_comma => 1,     # set option numf_comma
+   ;
  }
  ...
  print qq~$mt{Example}:\n$mt{["Can't open file [_1]: [_2].", $f, $!]}\n~;
@@ -176,7 +182,7 @@ C<">TIEHASHC<"> ties your hash and set options defaults.
 
 =head2 Config
 
-C<">Config<"> configures the language handle and/or options.
+C<">ConfigC<"> configures the language handle and/or options.
 
  # configure the language handle
  tied(%mt)->Config(L10N => $lh);
@@ -243,7 +249,7 @@ C<">STOREC<"> stores the language handle or options.
 The method calls croak, if the key of your hash is undef or your key isn't correct
 and if the value, you set to option C<">nbspC<">, is undef.
 
-=head2 Keys (depreacted, see Config)
+=head2 Keys (deprecated, see Config)
 
 Get all keys back.
 
