@@ -5,7 +5,7 @@ use strict;
 use warnings;
 use Carp qw(croak);
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 require Tie::Hash;
 our @ISA = qw(Tie::Hash);
@@ -44,7 +44,7 @@ sub FETCH {
   };
   $@ and croak $@;
   # By the translation the 'nbsp_flag' becomes blank put respectively behind one.
-  # These so highlighted blanks are changed after the translation into '&nbsp;'.
+  # These so highlighted blanks are substituted after the translation into '&nbsp;'.
   if (defined $self->{nbsp_flag} and length $self->{nbsp_flag}) {
     s/ \Q$self->{nbsp_flag}\E/$self->{nbsp}/g;
   }
@@ -104,7 +104,6 @@ Locale::Maketext::TieHash::L10N - Tying language handle to a hash
  $lh{numf_comma} = 1;
  ...
  print $lh->maketext('Example') . ":\n" . $lh->maketext("Can't open file [_1]: [_2].", $f, $!) . "\n";
- ...
 
 =head2 Example for writing HTML
 
@@ -155,7 +154,76 @@ For switching the functionality off,
 set the value to undef or a character string of the length 0.
 C<">nbspC<"> per default is C<">&nbsp;C<">.
 
+=head1 METHODS
+
+=head2 TIEHASH
+
+ use Locale::Maketext::TieHash::L10N;
+ tie my %mt, 'Locale::Maketext::TieHash::L10N';
+
+C<">TIEHASHC<"> ties your hash and set options defaults.
+
+=head2 STORE
+
+C<">STOREC<"> stores the language handle or options.
+
+ # store the language handle
+ $mt{L10N} = $lh;
+
+ # store option of language handle
+ $mt{numf_comma} = 1;
+ # the same is:
+ $lh->{numf_comma} = 1;
+
+ # only for debugging your HTML response
+ $mt{nbsp} = 'see_position_of_nbsp_in_HTML_response';   # default is '&nbsp;'
+ 
+ # Set a flag to say:
+ #  Substitute the whitespace before this flag and this flag to '&nbsp;' or your debugging string.
+ # The "nbsp_flag" is a string (1 or more characters).
+ $mt{nbsp_flag} = '~';
+
+The method calls croak, if the key of your hash is undef or your key isn't correct
+and if the value, you set to option C<">nbspC<">, is undef.
+
+=head2 FETCH
+
+C<">FETCHC<"> translate the given key of your hash and give back the translated string as value.
+
+ # translation
+ print $mt{'you write this language'};
+ # the same is:
+ print $lh->maketext('you write this language');
+ ...
+ print $mt{['Put [*,_1,component,components,no component] together.', $number]};
+ # the same is:
+ print $lh->maketext('Put [*,_1,component,components,no component] together.', $number);
+ ...
+ # Use "nbsp" and the "nbsp_flag" is true.
+ print $mt{['Put [*,_1,~component,~components,no component] together.', $number]};
+ # the same is:
+ my $translation = $lh->maketext('Put [*,_1,~component,~components,no component] together.', $number);
+ $tanslation =~ s/ ~/&nbsp;/g;   # But not a global debugging function is available.
+
+The method calls croak, if the method C<">maketextC<"> of your stored language handle dies.
+
+=head2 Keys
+
+Get all keys back.
+
+=head2 Values
+
+Get all values back.
+
+=head2 Get
+
+Submit 1 key or more. The method C<">GetC<"> give you the values back.
+
+The method calls croak if a key is undef or unknown.
+
 =head1 SEE ALSO
+
+Tie::Hash
 
 Locale::Maketext
 
