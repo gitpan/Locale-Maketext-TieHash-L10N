@@ -5,32 +5,40 @@ use strict;
 use warnings;
 use Carp qw(croak);
 
-our $VERSION = '0.02';
+our $VERSION = '0.04';
 
 require Tie::Hash;
 our @ISA = qw(Tie::Hash);
 
 sub TIEHASH {
-  bless {nbsp => '&nbsp;'}, shift;
+  my $self = bless {}, shift;
+  () = $self->Config(nbsp => '&nbsp;', @_);
+  $self;
 }
 
-# store language handle or options
-sub STORE {
-  # Object, Key, Value
-  my ($self, $key, $value) = @_;
-  unless ($key) {
-    croak 'key is not true';
+sub Config
+{ my $self = shift;
+  while (@_)
+  { my ($key, $value) = (shift(), shift);
+    unless ($key) {
+      croak 'key is not true';
+    }
+    elsif ($key =~ /^(?:L10N|nbsp|nbsp_flag)$/) {
+      $key eq 'nbsp' and (defined $value or croak "key is 'nbsp', value is undef");
+      $self->{$key} = $value;
+    }
+    elsif ($key eq 'numf_comma') {
+      $self->{L10N}->{numf_comma} = $value;
+    }
+    else {
+      croak "key is not 'L10N' or 'nbsp' or 'nbsp_flag' or 'numf_comma'";
+    }
   }
-  elsif ($key =~ /^(?:L10N|nbsp|nbsp_flag)$/) {
-    $key eq 'nbsp' and (defined $value or croak "key is 'nbsp', value is undef");
-    $self->{$key} = $value;
-  }
-  elsif ($key eq 'numf_comma') {
-    $self->{L10N}->{numf_comma} = $value;
-  }
-  else {
-    croak "key is not 'L10N' or 'nbsp' or 'nbsp_flag' or 'numf_comma'";
-  }
+  ( %{$self},
+    exists $self->{L10N}
+    ? (numf_comma => $self->{L10N}->{numf_comma})
+    : (),
+  );
 }
 
 # translate
@@ -51,26 +59,32 @@ sub FETCH {
   $_;
 }
 
-# get all keys back
-sub Keys {
-  qw(L10N nbsp nbsp_flag);
+# store language handle or options (deprecated)
+sub STORE {
+  # Object, Key, Value
+  my ($self, $key, $value) = @_;
+  () = $self->Config($key => $value);
 }
 
-# get all values back
+# get all keys back (deprecated)
+sub Keys {
+  my $self = shift;
+  keys %{{$self->Config}};
+}
+
+# get all values back (deprecated)
 sub Values {
   my $self = shift;
-  ($self->{L10N}, $self->{nbsp}, $self->{nbsp_flag});
+  values %{{$self->Config}};
 }
 
-# get values
+# get values (deprecated)
 sub Get {
   my $self = shift;
-  my @rv;
-  for (@_) {
-    $_ or croak "Get(undef) detected";
-    /^(?:L10N|nbsp|nbsp_flag)$/ or croak "unknown '$_'";
-    push @rv, $self->{$_};
+  for (@_)
+  { $_ or croak 'key is not true';
   }
+  my @rv = @{{$self->Config}}{@_};
   return wantarray ? @rv : $rv[0];
 }
 
@@ -85,14 +99,12 @@ Locale::Maketext::TieHash::L10N - Tying language handle to a hash
 
  use strict;
  use Locale::Maketext::TieHash::L10N;
- tie my %mt, 'Locale::Maketext::TieHash::L10N';
+ my %mt;
  { use MyProgram::L10N;
    my $lh = MyProgram::L10N->get_handle() || die "What language?";
-   # store language handle
-   $mt{L10N} = $lh;
+   # configure language handle and option numf_comma
+   tie %mt, 'Locale::Maketext::TieHash::L10N', L10N => $lh, numf_comma => 1;
  }
- # store option numf_comma
- $mt{numf_comma} = 1;
  ...
  print qq~$mt{Example}:\n$mt{["Can't open file [_1]: [_2].", $f, $!]}\n~;
 
@@ -109,31 +121,30 @@ Locale::Maketext::TieHash::L10N - Tying language handle to a hash
 
  use strict;
  use Locale::Maketext::TieHash::L10N;
- tie my %mt, 'Locale::Maketext::TieHash::L10N';
+ my %mt;
  { use MyProgram::L10N;
    my $lh = MyProgram::L10N->get_handle() || die "What language?";
-   # store language handle
-   $mt{L10N} = $lh;
+   # tie and configure
+   tie %mt, 'Locale::Maketext::TieHash::L10N',
+     L10N       => $lh,   # save language handle
+     numf_comma => 1,     # set option numf_comma
+     nbsp_flag  => '~',   # set nbsp_flag to '~'
+     # If you want to test your Script,
+     # you set "nbsp" on a string which you see in the Browser.
+     nbsp       => '<span style="color:red">§</span>',
+   ;
  }
- # store option numf_comma and set the nbsp_flag to '~';
- @mt{qw/numf_comma nbsp_flag/} = qw/1 ~/;
- # If you want to test your Script, you set "nbsp" on a string which you see in the Browser.
- $mt{nbsp} = '<span style="color:red">§</span>';
  ...
  # The browser shows value and unity always on a line.
  print qq#$mt{["Put [*,_1,~component,~components,no component] together, then have [*,_2,~piece,~pieces,no piece] of equipment.", $component, $piece]}\n#;
 
-=head2 get the language handle C<">L10NC<">, C<">nbspC<"> and/or C<">nbsp_flagC<"> back
+=head2 read Configuration
 
- # You can get the language handle "L10N", "nbsp" and/or "nbsp_flag" back on this way.
- my ($lh, $nbsp, $nbsp_flag) = tied(%mt)->Get(qw/L10N nbsp nbsp_flag/);
- # You can get the keys "L10N", "nbsp" and "nbsp_flag" back on this way.
- my @keys = tied(%mt)->Keys();
- # You can get the values of "L10N", "nbsp" and "nbsp_flag" back on this way.
- my @values = tied(%mt)->Values();
- # This is the way to store values of keys in another tyed hash like %mt.
- my %hash;
- @hash{tied(%mt)->Keys} = tied(%mt)->Values;
+ my %config = tied(%mt)->Config();
+
+=head2 write Configuration
+
+ my %config = tied(%mt)->Config(numf_comma => 0, nbsp_flag => '');
 
 =head1 DESCRIPTION
 
@@ -159,32 +170,34 @@ C<">nbspC<"> per default is C<">&nbsp;C<">.
 =head2 TIEHASH
 
  use Locale::Maketext::TieHash::L10N;
- tie my %mt, 'Locale::Maketext::TieHash::L10N';
+ tie my %mt, 'Locale::Maketext::TieHash::L10N', %config;
 
 C<">TIEHASHC<"> ties your hash and set options defaults.
 
-=head2 STORE
+=head2 Config
 
-C<">STOREC<"> stores the language handle or options.
+C<">Config<"> configures the language handle and/or options.
 
- # store the language handle
- $mt{L10N} = $lh;
+ # configure the language handle
+ tied(%mt)->Config(L10N => $lh);
 
- # store option of language handle
- $mt{numf_comma} = 1;
+ # configure option of language handle
+ tied(%mt)->Config(numf_comma => 1);
  # the same is:
  $lh->{numf_comma} = 1;
 
  # only for debugging your HTML response
- $mt{nbsp} = 'see_position_of_nbsp_in_HTML_response';   # default is '&nbsp;'
- 
+ tied(%mt)->Config(nbsp => 'see_position_of_nbsp_in_HTML_response');   # default is '&nbsp;'
+
  # Set a flag to say:
  #  Substitute the whitespace before this flag and this flag to '&nbsp;' or your debugging string.
  # The "nbsp_flag" is a string (1 or more characters).
- $mt{nbsp_flag} = '~';
+ tied(%mt)->Config(nbsp_flag => '~');
 
 The method calls croak, if the key of your hash is undef or your key isn't correct
 and if the value, you set to option C<">nbspC<">, is undef.
+
+C<">ConfigC<"> accepts all parameters as Hash and gives a Hash back with all attitudes.
 
 =head2 FETCH
 
@@ -207,15 +220,38 @@ C<">FETCHC<"> translate the given key of your hash and give back the translated 
 
 The method calls croak, if the method C<">maketextC<"> of your stored language handle dies.
 
-=head2 Keys
+=head2 STORE (deprecated, see Config)
+
+C<">STOREC<"> stores the language handle or options.
+
+ # store the language handle
+ $mt{L10N} = $lh;
+
+ # store option of language handle
+ $mt{numf_comma} = 1;
+ # the same is:
+ $lh->{numf_comma} = 1;
+
+ # only for debugging your HTML response
+ $mt{nbsp} = 'see_position_of_nbsp_in_HTML_response';   # default is '&nbsp;'
+
+ # Set a flag to say:
+ #  Substitute the whitespace before this flag and this flag to '&nbsp;' or your debugging string.
+ # The "nbsp_flag" is a string (1 or more characters).
+ $mt{nbsp_flag} = '~';
+
+The method calls croak, if the key of your hash is undef or your key isn't correct
+and if the value, you set to option C<">nbspC<">, is undef.
+
+=head2 Keys (depreacted, see Config)
 
 Get all keys back.
 
-=head2 Values
+=head2 Values (deprecated, see Config)
 
 Get all values back.
 
-=head2 Get
+=head2 Get (deprecated, see Config)
 
 Submit 1 key or more. The method C<">GetC<"> give you the values back.
 
