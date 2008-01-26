@@ -1,7 +1,0 @@
-Changes
-Makefile.PL
-MANIFEST
-README
-t/Locale-Maketext-TieHash-L10N.t
-lib/Locale/Maketext/TieHash/L10N.pm
-META.yml                                 Module meta-data (added by MakeMaker)

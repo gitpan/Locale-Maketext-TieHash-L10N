@@ -1,12 +1,23 @@
-# http://module-build.sourceforge.net/META-spec.html
-#XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
-name:         Locale-Maketext-TieHash-L10N
-version:      0.05
-version_from: lib/Locale/Maketext/TieHash/L10N.pm
-installdirs:  site
+---
+name: Locale-Maketext-TieHash-L10N
+version: 0.06
+author:
+  - 'Steffen Winkler <steffenw@cpan.org>'
+abstract: Tying language handle to a hash
+license: perl
+resources:
+  license: http://dev.perl.org/licenses/
 requires:
-    Locale::Maketext:              1.06
-    Test::More:                    0.47
-
-distribution_type: module
-generated_by: ExtUtils::MakeMaker version 6.17
+  Carp: 0
+  Params::Validate: 0
+build_requires:
+  Locale::Maketext: 1.06
+  Test::More: 0
+provides:
+  Locale::Maketext::TieHash::L10N:
+    file: lib/Locale/Maketext/TieHash/L10N.pm
+    version: 0.06
+generated_by: Module::Build version 0.2801
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.2.html
+  version: 1.2

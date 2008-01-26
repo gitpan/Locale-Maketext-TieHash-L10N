@@ -1,20 +1,22 @@
 Revision history for Perl extension Locale::Maketext::TieHash::L10N.
 
 0.01  Fri Dec 31 08:27:13 2004
-	- original version; created by h2xs 1.23 with options
-		-XA -n Locale::Maketext::TieHash::L10N
+    - original version; created by h2xs 1.23 with options
+        -XA -n Locale::Maketext::TieHash::L10N
 
 0.02  Sun Jan  9 21:45:01 2005
-	- only pod-documentation is expanded
+    - only pod-documentation is expanded
 
 0.04  Sat Feb 12 19:48:00 2005
-	- new Method Config
-        - Methods deprecated
-          - STORE
-          - Keys
-          - Values
-          - Get
+    - new Method Config
+    - Methods deprecated
+    - STORE
+    - Keys
+    - Values
+    - Get
 
 0.05  Sun Feb 13 14:10:00 2005
-	- only pod-documentation is expanded
+    - only pod-documentation is expanded
 
+0.06  Sat Jan 26 18:00:00 2008
+    - Build.pl
