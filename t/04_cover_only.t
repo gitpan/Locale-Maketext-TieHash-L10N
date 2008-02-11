@@ -35,7 +35,10 @@ eval {
 };
 like(
     $@,
-    qr{how to say}ms,
+    qr{ (?:
+        how \s to \s say
+        | \A \z
+    ) }xms,
     'translation error',
 );
 

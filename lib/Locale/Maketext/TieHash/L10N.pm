@@ -3,7 +3,7 @@ package Locale::Maketext::TieHash::L10N;
 use strict;
 use warnings;
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 use Carp qw(croak);
 use Params::Validate qw(:all);
