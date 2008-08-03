@@ -1,5 +1,7 @@
 Build.PL
 Changes
+exapmle/01_maketext.pl
+exapmle/02_extended.pl
 lib/Locale/Maketext/TieHash/L10N.pm
 MANIFEST			This list of files
 README

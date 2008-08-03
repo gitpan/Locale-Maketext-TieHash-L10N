@@ -1,27 +1,33 @@
 Revision history for Perl extension Locale::Maketext::TieHash::L10N.
 
-0.01  Fri Dec 31 08:27:13 2004
-    - original version; created by h2xs 1.23 with options
-        -XA -n Locale::Maketext::TieHash::L10N
-
-0.02  Sun Jan  9 21:45:01 2005
-    - only pod-documentation is expanded
-
-0.04  Sat Feb 12 19:48:00 2005
-    - new Method Config
-    - Methods deprecated
-    - STORE
-    - Keys
-    - Values
-    - Get
-
-0.05  Sun Feb 13 14:10:00 2005
-    - only pod-documentation is expanded
-
-0.06  Sat Jan 26 18:00:00 2008
-    - Build.pl
+0.08  Sun Aug 03 21:00:00 2008
+- repair examples in POD
+- add example
+- better Kwalitee
 
 0.07  Tue Feb 12 00:30:00 2008
-    - Repair 04_cover_only.t translation error
-      because the error message of Locale::Maketext
-      for translation not found is no longer "how to say, it's q{}.
+- Repair 04_cover_only.t translation error
+  because the error message of Locale::Maketext
+  for translation not found is no longer "how to say, it's q{}.
+
+0.06  Sat Jan 26 18:00:00 2008
+- Build.pl
+
+
+0.05  Sun Feb 13 14:10:00 2005
+- only pod-documentation is expanded
+
+0.04  Sat Feb 12 19:48:00 2005
+- new Method Config
+- Methods deprecated
+- STORE
+- Keys
+- Values
+- Get
+
+0.02  Sun Jan  9 21:45:01 2005
+- only pod-documentation is expanded
+
+0.01  Fri Dec 31 08:27:13 2004
+- original version; created by h2xs 1.23 with options
+  -XA -n Locale::Maketext::TieHash::L10N

@@ -3,7 +3,7 @@ package Locale::Maketext::TieHash::L10N;
 use strict;
 use warnings;
 
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 use Carp qw(croak);
 use Params::Validate qw(:all);
@@ -223,7 +223,7 @@ Locale::Maketext::TieHash::L10N - Tying language handle to a hash
 
 =head1 VERSION
 
-0.06
+0.08
 
 =head1 SYNOPSIS
 
@@ -236,9 +236,8 @@ Locale::Maketext::TieHash::L10N - Tying language handle to a hash
     # tie and configure
     tie my %mt, 'Locale::Maketext::TieHash::L10N', (
         # save language handle
-        L10N       => MyProgram::L10N->get_handle()
-                      || die 'What language?',
-        # set option numf_comma
+        L10N => ( MyProgram::L10N->get_handle() or die 'What language?' ),
+        # set option numf_comma to change . and , inside of numbers
         numf_comma => 1,
     );
 
@@ -246,7 +245,7 @@ Locale::Maketext::TieHash::L10N - Tying language handle to a hash
 
     print <<"EOT";
     $mt{Example}:
-    $mt{[ q{Can't open file [_1]: [_2].}, $f, $! ]}
+    $mt{[ 'Can not open file [_1]: [_2].', $file_name, $! ]}
     EOT
 
 =head2 The way without this module - You better see the difference.
@@ -264,9 +263,9 @@ Locale::Maketext::TieHash::L10N - Tying language handle to a hash
 
     # no string interpolation for translation
     print
-        $lh->maketext('Example') 
+        $lh->maketext('Example')
         . ":\n"
-        . $lh->maketext( q{Can't open file [_1]: [_2].}, $f, $! ) 
+        . $lh->maketext( 'Can not open file [_1]: [_2].', $f, $! )
         . "\n";
 
 =head2 Example for writing HTML
@@ -277,18 +276,17 @@ Locale::Maketext::TieHash::L10N - Tying language handle to a hash
     use Locale::Maketext::TieHash::L10N;
     use MyProgram::L10N;
     use charnames qw(:full);
-    use Reasonly qw(Readonly);
+    use Readonly qw(Readonly);
 
     tie my %mt, 'Locale::Maketext::TieHash::L10N', (
         # save language handle
-        L10N       => MyProgram::L10N->get_handle()
-                      || die 'What language?',
-        # set option numf_comma
+        L10N       => ( MyProgram::L10N->get_handle() or die 'What language?' ),
+        # set option numf_comma to change . and , inside of numbers
         numf_comma => 1,
         # For no-break space between number and dimension unit
         # set the "nbsp_flag" to a placeholder
-        # like "\N{UNIT SEPARATOR}}" or something else.
-        nbsp_flag  => "\N{UNIT SEPARATOR}",
+        # like "\N{INFORMATION SEPARATOR ONE}" or something else.
+        nbsp_flag  => "\N{INFORMATION SEPARATOR ONE}",
         # For Unicode set "nbsp" to "\N{NO-BREAK SPACE}".
         # For testing set "nbsp" to a string which you see in the Browser
         # like:
@@ -298,9 +296,9 @@ Locale::Maketext::TieHash::L10N - Tying language handle to a hash
     ...
 
     # The browser shows value and unit always on a line.
-    Readonly my $US => "\N{UNIT SEPARATOR}";
+    Readonly my $IS1 => "\N{INFORMATION SEPARATOR ONE}";
     print <<"EOT";
-    $mt{["Put [*,_1,${US}component,${US}components,no component] together, then have [*,_2,${US}piece,${US}pieces,no piece] of equipment.", $component, $piece]}
+    $mt{["Put [*,_1,${IS1}component,${IS1}components,no component] together, then have [*,_2,${IS1}piece,${IS1}pieces,no piece] of equipment.", $component, $piece]}
     EOT
 
 =head2 read Configuration
@@ -314,6 +312,11 @@ Locale::Maketext::TieHash::L10N - Tying language handle to a hash
 or
 
     my %config = tied(%mt)->config(numf_comma => 0, nbsp_flag => undef);
+
+=head1 EXAMPLE
+
+Inside of this Distribution is a directory named example.
+Run this *.pl files.
 
 =head1 DESCRIPTION
 
@@ -409,7 +412,7 @@ or to the debugging string.
 
 The 'nbsp_flag' is a string (1 or more characters).
 
-    tied(%mt)->set_nbsp_flag("\N{UNIT SEPARATOR}");
+    tied(%mt)->set_nbsp_flag("\N{INFORMATION SEPARATOR ONE}");
 
 =head2 method get_nbsp_flag
 
@@ -436,11 +439,11 @@ and give back the translated string as value.
     ...
 
     # Use "nbsp" and the "nbsp_flag".
-    print $mt{["Put [*,_1,${US}component,${US}components,no component] together.", $number]};
+    print $mt{["Put [*,_1,${IS1}component,${IS1}components,no component] together.", $number]};
 
     # the same is:
-    my $translation = $lh->maketext("Put [*,_1,${US}component,${US}components,no component] together.", $number);
-    $tanslation =~ s{ $US}{\N{NO-BREAK SPACE}}msg; # But no global debugging function is available.
+    my $translation = $lh->maketext("Put [*,_1,${IS1}component,${IS1}components,no component] together.", $number);
+    $tanslation =~ s{ $IS1}{\N{NO-BREAK SPACE}}msg; # But no global debugging function is available.
 
 The method calls croak, if the method 'maketext' of your stored language handle dies.
 
@@ -473,7 +476,7 @@ Stores the language handle or options.
     # or to the debugging string.
 
     # The "nbsp_flag" is a string (1 or more characters).
-    $mt{nbsp_flag} = "\N{UNIT SEPARATOR}";
+    $mt{nbsp_flag} = "\N{UNIT SEPARATOR ONE}";
 
 =head2 method Keys (deprecated)
 
@@ -528,9 +531,9 @@ Steffen Winkler
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (c) 2004-2008,
+Copyright (c) 2004 - 2008,
 Steffen Winkler
-C<< <steffenw@cpan.org> >>.
+C<< <steffenw at cpan.org> >>.
 All rights reserved.
 
 This module is free software;
