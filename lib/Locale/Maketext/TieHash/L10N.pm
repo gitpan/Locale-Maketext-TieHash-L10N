@@ -3,7 +3,7 @@ package Locale::Maketext::TieHash::L10N;
 use strict;
 use warnings;
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 use Carp qw(croak);
 use Params::Validate qw(:all);
@@ -223,7 +223,7 @@ Locale::Maketext::TieHash::L10N - Tying language handle to a hash
 
 =head1 VERSION
 
-0.08
+0.09
 
 =head1 SYNOPSIS
 

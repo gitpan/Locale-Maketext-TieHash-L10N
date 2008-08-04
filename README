@@ -1,4 +1,4 @@
-Locale-Maketext-TieHash-L10N version 0.08
+Locale-Maketext-TieHash-L10N version 0.09
 =========================================
 
 Object methods like maketext don't have interpreted into strings.
@@ -34,7 +34,7 @@ COPYRIGHT AND LICENCE
 
 Copyright (c) 2004 - 2008,
 Steffen Winkler
-steffenw@cpan.org.
+steffenw at cpan.org.
 All rights reserved.
 
 This module is free software;
