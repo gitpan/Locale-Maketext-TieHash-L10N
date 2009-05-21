@@ -3,10 +3,13 @@ package Locale::Maketext::TieHash::L10N;
 use strict;
 use warnings;
 
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 
 use Carp qw(croak);
 use Params::Validate qw(:all);
+use English qw(-no_match_vars $EVAL_ERROR);
+
+## no critic (ArgUnpacking)
 
 sub TIEHASH {
     my ($class, %init) = validate_pos(
@@ -62,7 +65,7 @@ sub config {
     return;
 }
 
-sub set_L10N {
+sub set_L10N { ## no critic (Capitalization)
     my ($self, $L10N) = validate_pos(
         @_,
         {isa => __PACKAGE__},
@@ -74,7 +77,7 @@ sub set_L10N {
     return $self;
 }
 
-sub get_L10N {
+sub get_L10N { ## no critic (Capitalization)
     my ($self) = validate_pos(
         @_,
         {isa => __PACKAGE__},
@@ -133,6 +136,8 @@ sub set_numf_comma {
     );
 
     $self->get_L10N()->{numf_comma} = $numf_comma;
+
+    return $self;
 }
 
 sub get_numf_comma {
@@ -153,16 +158,16 @@ sub FETCH {
         {type => SCALAR | ARRAYREF},
     );
 
-    my $text;
-    eval {
+    my $text = eval {
         # Several parameters to maketext will submit as reference on an array.
-        $text = $self->get_L10N()->maketext(
+        $self->get_L10N()->maketext(
             ref $key eq 'ARRAY'
             ? @{$key}
             : $key
         );
     };
-    $@ and croak $@;
+    croak $EVAL_ERROR if $EVAL_ERROR;
+
     # During the translation the 'nbsp_flag' becomes blank put respectively behind one.
     # These so highlighted blanks are substituted after the translation into '&nbsp;'.
     my $nbsp_flag = $self->get_nbsp_flag();
@@ -178,31 +183,31 @@ sub FETCH {
 }
 
 # deprecated
-sub Config {
+sub Config { ## no critic (Capitalization)
     goto &config;
 }
 
 # deprecated
-sub Get {
+sub Get { ## no critic (Capitalization)
     my ($self, @keys) = validate_pos(
         @_,
         {isa   => __PACKAGE__},
         ({type => SCALAR}) x (@_ - 1),
     );
 
-    return map {
+    return map { ## no critic (ComplexMappings)
         my $method = "get_$_";
         $self->$method();
     } @keys;
 }
 
 # deprecated
-sub Keys {
+sub Keys { ## no critic (Capitalization)
     return keys %{ { shift->config() } };
 }
 
 # deprecated
-sub Values {
+sub Values { ## no critic (Capitalization)
     return values %{ { shift->config() } };
 }
 
@@ -221,9 +226,11 @@ __END__
 
 Locale::Maketext::TieHash::L10N - Tying language handle to a hash
 
+$Id$
+
 =head1 VERSION
 
-0.09
+0.10
 
 =head1 SYNOPSIS
 
@@ -531,7 +538,7 @@ Steffen Winkler
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (c) 2004 - 2008,
+Copyright (c) 2004 - 2009,
 Steffen Winkler
 C<< <steffenw at cpan.org> >>.
 All rights reserved.

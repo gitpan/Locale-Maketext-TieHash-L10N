@@ -3,7 +3,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 11;
+use Test::More tests => 11 + 1;
+use Test::NoWarnings;
 
 BEGIN {
     use_ok('Locale::Maketext::TieHash::L10N');

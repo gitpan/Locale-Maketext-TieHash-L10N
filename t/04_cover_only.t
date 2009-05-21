@@ -3,7 +3,10 @@
 use strict;
 use warnings;
 
-use Test::More tests => 5;
+use Test::More tests => 5 + 1;
+use Test::Exception;
+use Test::NoWarnings;
+
 BEGIN {
     use_ok('Locale::Maketext::TieHash::L10N');
 }
@@ -30,11 +33,10 @@ tie my %mt, 'Locale::Maketext::TieHash::L10N', (
             || die 'What language?',
 );
 
-eval {
-    () = $mt{test};
-};
-like(
-    $@,
+throws_ok(
+    sub {
+        () = $mt{test};
+    },
     qr{ (?:
         how \s to \s say
         | \A \z

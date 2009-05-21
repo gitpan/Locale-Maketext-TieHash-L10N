@@ -1,5 +1,8 @@
 Revision history for Perl extension Locale::Maketext::TieHash::L10N.
 
+0.10  Thu May 21 18:00:00 2009
+- Perl critic
+
 0.09  Mon Aug 04 20:30:00 2008
 - rename dir exapmle to example
 

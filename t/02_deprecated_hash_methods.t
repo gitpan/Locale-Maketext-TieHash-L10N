@@ -3,7 +3,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 6;
+use Test::More tests => 6 + 1;
+use Test::Exception;
+use Test::NoWarnings;
 
 BEGIN {
     use_ok('Locale::Maketext::TieHash::L10N');
@@ -56,15 +58,17 @@ tie my %mt, 'Locale::Maketext::TieHash::L10N', (
 # exceptions
 {
     my $object = tied %mt;
-    eval { $object->Get(undef) };
-    like(
-    	$@,
-         qr{\QGet was an 'undef'\E}xms,
+    throws_ok(
+        sub {
+            $object->Get(undef);
+        },
+        qr{\QGet was an 'undef'\E}xms,
         'initiating dying by deprecated method Get()',
     );
-    eval { $object->Get('wrong') };
-    like(
-        $@,
+    throws_ok(
+        sub {
+            $object->Get('wrong');
+        },
         qr{get_wrong}xms,
         'get wrong key',
     );

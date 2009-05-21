@@ -16,6 +16,8 @@ Module::Build->new(
     build_requires => {
         'Locale::Maketext' => '1.06',
         'Test::Simple'     => 0, # for Test::More
+        'Test::NoWarnings' => 0,
+        'Test::Exception'   => 0,
     },
     recommends => {
         # build

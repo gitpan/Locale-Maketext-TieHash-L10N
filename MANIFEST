@@ -9,7 +9,9 @@ t/01_basics.t
 t/02_deprecated_hash_methods.t
 t/03_deprecated_uc_methods.t
 t/04_cover_only.t
-t/98_pod.t
-t/99_pod_coverage.t
+t/chars.t
+t/perl_critic.t
+t/pod.t
+t/pod_coverage.t
 Makefile.PL
 META.yml
