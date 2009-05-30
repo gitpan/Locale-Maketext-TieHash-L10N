@@ -1,5 +1,8 @@
 Revision history for Perl extension Locale::Maketext::TieHash::L10N.
 
+0.11  Sat May 30 09:00:00 2009
+- bugfix build dependencies
+
 0.10  Thu May 21 18:00:00 2009
 - Perl critic
 
