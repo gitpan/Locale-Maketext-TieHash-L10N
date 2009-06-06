@@ -20,10 +20,10 @@ BEGIN {
 {
     package L10N::en;
     use base qw(L10N);
+
+    no warnings qw(once);
     our %Lexicon = ();
 }
-
-package main;
 
 # set language handle
 tie my %mt, 'Locale::Maketext::TieHash::L10N', (

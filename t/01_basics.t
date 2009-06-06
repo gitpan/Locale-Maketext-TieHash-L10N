@@ -20,6 +20,8 @@ BEGIN {
 {
     package L10N::en;
     use base qw(L10N);
+
+    no warnings qw(once);
     our %Lexicon = (
         'Beispiel'
             => 'Example',
@@ -29,8 +31,6 @@ BEGIN {
             => 'Put [*,_1,~component,~components,no component] together, then have [*,_2,~piece,~pieces,no piece] of equipment.',
     );
 }
-
-package main;
 
 # set language handle
 tie my %mt, 'Locale::Maketext::TieHash::L10N', (

@@ -21,12 +21,12 @@ BEGIN {
 {
     package L10N::en;
     use base qw(L10N);
+
+    no warnings qw(once);
     our %Lexicon = (
         unbekannt => 'unknown ~',
     );
 }
-
-package main;
 
 tie my %mt, 'Locale::Maketext::TieHash::L10N', (
     L10N => L10N->get_handle('en')

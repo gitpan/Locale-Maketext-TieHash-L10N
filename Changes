@@ -1,5 +1,8 @@
 Revision history for Perl extension Locale::Maketext::TieHash::L10N.
 
+0.12  Sat Jun 06 07:00:00 2009
+- bugfix warning at %L10N::en::Lexicon" used only once
+
 0.11  Sat May 30 09:00:00 2009
 - bugfix build dependencies
 

@@ -1,6 +1,6 @@
 ---
 name: Locale-Maketext-TieHash-L10N
-version: 0.11
+version: 0.12
 author:
   - 'Steffen Winkler <steffenw at cpan.org>'
 abstract: 'Locale::Maketext::TieHash::L10N - Tying language handle to a hash'
@@ -22,7 +22,7 @@ recommends:
 provides:
   Locale::Maketext::TieHash::L10N:
     file: lib/Locale/Maketext/TieHash/L10N.pm
-    version: 0.11
+    version: 0.12
 generated_by: Module::Build version 0.33
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html

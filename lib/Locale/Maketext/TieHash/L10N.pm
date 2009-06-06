@@ -3,7 +3,7 @@ package Locale::Maketext::TieHash::L10N;
 use strict;
 use warnings;
 
-our $VERSION = '0.11';
+our $VERSION = '0.12';
 
 use Carp qw(croak);
 use Params::Validate qw(:all);
@@ -230,7 +230,7 @@ $Id$
 
 =head1 VERSION
 
-0.11
+0.12
 
 =head1 SYNOPSIS
 
