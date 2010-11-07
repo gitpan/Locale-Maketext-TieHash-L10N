@@ -1,11 +1,10 @@
-Locale-Maketext-TieHash-L10N version 0.12
+Locale-Maketext-TieHash-L10N version 0.13
 =========================================
 
 Object methods like maketext don't have interpreted into strings.
 The module ties the language handle to a hash.
 The object method maketext is executed at fetch hash.
 At long last this is the same, only the notation is shorter.
-
 
 INSTALLATION
 
@@ -27,12 +26,12 @@ DEPENDENCIES
 
 This module requires these other modules and libraries:
 
-  Carp
-  Params::Validate
+    Carp
+    Params::Validate
 
 COPYRIGHT AND LICENCE
 
-Copyright (c) 2004 - 2009,
+Copyright (c) 2004 - 2010,
 Steffen Winkler
 steffenw at cpan.org.
 All rights reserved.

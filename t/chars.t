@@ -27,12 +27,16 @@ find(
         untaint         => 1,
         wanted          => sub {
             -d and return;
-            $File::Find::name =~ m{/ \.svn / | \.mo \z}xms
-                and return;
-            $File::Find::name !~ m{
+            $File::Find::name =~ m{
+                / \.svn /
+                | / \.git /
+                | / \.gitignore \z
+                | \.mo \z
+            }xms and return;
+            $File::Find::name =~ m{
                 (
                     (?: /lib/ | /example/ | /t/ )
-                    | /Build\.pl \z
+                    | /Build\.PL \z
                     | /Changes \z
                     | /README \z
                     | /MANIFEST\.SKIP \z
@@ -44,17 +48,19 @@ find(
     $PATH,
 );
 
-plan ( tests => 5 * scalar @list );
+plan( tests => 5 * scalar @list );
+
+my @ignore_non_ascii = ();
 
 for my $file_name (sort @list) {
     my @lines;
     {
-        open my $file, '<: raw', $file_name
+        open my $file, '< :raw', $file_name
             or die "Cannnot open file $file_name";
         local $/ = ();
         my $text = <$file>;
         # repair last line without \n
-        $text =~ s{[^\x0D\x0A] \z}{\x0D\x0A}xms;
+        $text =~ s{([^\x0D\x0A]) \z}{$1\x0D\x0A}xms;
         @lines = split m{\x0A}, $text;
     }
 
@@ -95,11 +101,19 @@ for my $file_name (sort @list) {
         'control chars',
         qr{[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]}xms,
     );
-    $find_line_numbers->(
-        "$file_name has no nonASCII chars",
-        'nonASCII chars',
-        qr{[\x80-\xFF]}xms,
-    );
+    NON_ASCII: {
+        for my $regex (@ignore_non_ascii) {
+            if ( $file_name =~ $regex ) {
+                ok(1, 'dummy');
+                next NON_ASCII;
+            }
+        }
+        $find_line_numbers->(
+            "$file_name has no nonASCII chars",
+            'nonASCII chars',
+            qr{[\x80-\xA6\xA8-\xFF]}xms, # A7 is §
+        );
+    }
     $find_line_numbers->(
         "$file_name has no trailing space",
         'trailing space',

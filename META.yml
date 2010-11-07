@@ -1,29 +1,33 @@
 ---
-name: Locale-Maketext-TieHash-L10N
-version: 0.12
+abstract: 'Locale::Maketext::TieHash::L10N - Tying language handle to a hash'
 author:
   - 'Steffen Winkler <steffenw at cpan.org>'
-abstract: 'Locale::Maketext::TieHash::L10N - Tying language handle to a hash'
-license: perl
-resources:
-  license: http://dev.perl.org/licenses/
-requires:
-  Params::Validate: 0
-  perl: 5.006001
 build_requires:
-  Locale::Maketext: 1.06
+  Cwd: 0
+  Locale::Maketext: 1.17
   Test::Exception: 0
-  Test::NoWarnings: 0
-  Test::Simple: 0
-recommends:
   Test::More: 0
-  Test::Pod: 1.14
-  Test::Pod::Coverage: 1.04
-provides:
-  Locale::Maketext::TieHash::L10N:
-    file: lib/Locale/Maketext/TieHash/L10N.pm
-    version: 0.12
-generated_by: Module::Build version 0.33
+  Test::NoWarnings: 0
+configure_requires:
+  Module::Build: 0.36
+generated_by: 'Module::Build version 0.3607'
+license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
+name: Locale-Maketext-TieHash-L10N
+provides:
+  Locale::Maketext::TieHash::L10N:
+    file: lib/Locale/Maketext/TieHash/L10N.pm
+    version: 0.13
+recommends:
+  Test::Pod: 1.14
+  Test::Pod::Coverage: 1.04
+requires:
+  Carp: 0
+  English: 0
+  Params::Validate: 0
+  perl: 5.006
+resources:
+  license: http://dev.perl.org/licenses/
+version: 0.13

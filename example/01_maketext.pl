@@ -38,6 +38,7 @@ use warnings;
 
 our $VERSION = 0;
 
+use English qw(-no_match_vars $OS_ERROR);
 use Carp qw(croak);
 use Locale::Maketext::TieHash::L10N;
 
@@ -53,7 +54,7 @@ my $is_open = open my $file_handle, '<', $file_name;
 if (! $is_open) {
     () = print <<"EOT";
 $mt{Example}:
-$mt{[ 'Can not open file [_1]: [_2].', $file_name, $! ]}
+$mt{[ 'Can not open file [_1]: [_2].', $file_name, $OS_ERROR ]}
 EOT
 }
 () = close $file_handle;

@@ -3,7 +3,7 @@ package Locale::Maketext::TieHash::L10N;
 use strict;
 use warnings;
 
-our $VERSION = '0.12';
+our $VERSION = '0.13';
 
 use Carp qw(croak);
 use Params::Validate qw(:all);
@@ -230,7 +230,7 @@ $Id$
 
 =head1 VERSION
 
-0.12
+0.13
 
 =head1 SYNOPSIS
 
@@ -516,7 +516,7 @@ nothing
 
 Carp
 
-L<Params::Validate> Comfortable parameter validation
+L<Params::Validate|Params::Validate> Comfortable parameter validation
 
 =head1 INCOMPATIBILITIES
 
@@ -528,9 +528,9 @@ not known
 
 =head1 SEE ALSO
 
-L<Locale::Maketext> Localisation framework
+L<Locale::Maketext|Locale::Maketext> Localisation framework
 
-L<Tie::Hash>
+L<Tie::Hash|Tie::Hash>
 
 =head1 AUTHOR
 
@@ -538,7 +538,7 @@ Steffen Winkler
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (c) 2004 - 2009,
+Copyright (c) 2004 - 2010,
 Steffen Winkler
 C<< <steffenw at cpan.org> >>.
 All rights reserved.
